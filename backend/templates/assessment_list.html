@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Assessments | NexusSkills{% endblock %}
+{% block page_title %}Assessments{% endblock %}
+{% block content %}
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+  <form class="search-bar" method="get" style="flex:1;margin-bottom:0">
+    <input type="text" name="search" value="{{ search }}" placeholder="Search assessments...">
+    <select name="status" onchange="this.form.submit()">
+      <option value="">All Category</option>
+      <option value="technical" {% if status_filter == 'technical' %}selected{% endif %}>Technical</option>
+      <option value="aptitude" {% if status_filter == 'aptitude' %}selected{% endif %}>Aptitude</option>
+      <option value="personality" {% if status_filter == 'personality' %}selected{% endif %}>Personality</option>
+      <option value="language" {% if status_filter == 'language' %}selected{% endif %}>Language</option>
+      <option value="domain" {% if status_filter == 'domain' %}selected{% endif %}>Domain</option>
+    </select>
+    <button type="submit" class="btn btn-primary btn-sm">Search</button>
+  </form>
+  <a href="/assessments/create/" class="btn btn-primary">+ New Assessment</a>
+</div>
+
+<div class="card">
+  {% if records %}
+  <table>
+    <thead>
+      <tr><th>Title</th><th>Category</th><th>Duration Mins</th><th>Questions Count</th><th>Status</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      {% for r in records %}
+      <tr>
+        <td><a href="/assessments/{{ r.pk }}/edit/"><strong>{{ r.title }}</strong></a></td>
+        <td><span class="badge badge-blue">{{ r.get_category_display }}</span></td>
+        <td>{{ r.duration_mins|default:"-" }}</td>
+        <td>{{ r.questions_count|default:"-" }}</td>
+        <td><span class="badge badge-blue">{{ r.get_status_display }}</span></td>
+        <td class="actions">
+          <a href="/assessments/{{ r.pk }}/edit/" class="btn btn-primary btn-sm">Edit</a>
+          <form method="post" action="/assessments/{{ r.pk }}/delete/" style="display:inline" onsubmit="return confirm('Delete?')">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm">Del</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty">
+    <p>No assessments found.</p>
+    <a href="/assessments/create/" class="btn btn-primary" style="margin-top:1rem">Create Assessment</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
