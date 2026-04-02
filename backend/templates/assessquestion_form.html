@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}{% if editing %}Edit{% else %}New{% endif %} AssessQuestion | NexusSkills{% endblock %}
+{% block page_title %}{% if editing %}Edit AssessQuestion{% else %}New AssessQuestion{% endif %}{% endblock %}
+{% block content %}
+<div class="card" style="max-width:750px">
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-row">
+      <div class="form-group">
+        <label>Assessment Title</label>
+        <input type="text" name="assessment_title" value="{{ record.assessment_title|default:'' }}">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Question</label>
+      <textarea name="question">{{ record.question|default:'' }}</textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Question Type</label>
+        <select name="question_type">
+          <option value="mcq" {% if record.question_type == 'mcq' %}selected{% endif %}>MCQ</option>
+          <option value="true_false" {% if record.question_type == 'true_false' %}selected{% endif %}>True False</option>
+          <option value="coding" {% if record.question_type == 'coding' %}selected{% endif %}>Coding</option>
+          <option value="short_answer" {% if record.question_type == 'short_answer' %}selected{% endif %}>Short Answer</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Difficulty</label>
+        <select name="difficulty">
+          <option value="easy" {% if record.difficulty == 'easy' %}selected{% endif %}>Easy</option>
+          <option value="medium" {% if record.difficulty == 'medium' %}selected{% endif %}>Medium</option>
+          <option value="hard" {% if record.difficulty == 'hard' %}selected{% endif %}>Hard</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Points</label>
+        <input type="number" name="points" value="{{ record.points|default:'0' }}">
+      </div>
+      <div class="form-group">
+        <label>Position</label>
+        <input type="number" name="position" value="{{ record.position|default:'0' }}">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Correct Answer</label>
+        <input type="text" name="correct_answer" value="{{ record.correct_answer|default:'' }}">
+      </div>
+    </div>
+
+    <div style="display:flex;gap:0.75rem;margin-top:1rem">
+      <button type="submit" class="btn btn-primary">{% if editing %}Update{% else %}Create{% endif %} AssessQuestion</button>
+      <a href="/assessquestions/" class="btn" style="background:var(--border);color:var(--text)">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
