@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | NexusSkills{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block content %}
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-label">Total Assessments</div>
+    <div class="stat-value">{{ assessment_count }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Total Assesscandidates</div>
+    <div class="stat-value" style="background:linear-gradient(135deg,#10b981,#06b6d4);-webkit-background-clip:text;background-clip:text">{{ assesscandidate_count }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Total Assessquestions</div>
+    <div class="stat-value" style="background:linear-gradient(135deg,#f59e0b,#f97316);-webkit-background-clip:text;background-clip:text">{{ assessquestion_count }}</div>
+  </div>
+</div>
+
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+    <h3>Recent Assessments</h3>
+    <a href="/assessments/create/" class="btn btn-primary btn-sm">+ New Assessment</a>
+  </div>
+  {% if recent %}
+  <table>
+    <thead>
+      <tr><th>Title</th><th>Category</th><th>Duration Mins</th><th>Questions Count</th><th>Status</th><th>Created</th></tr>
+    </thead>
+    <tbody>
+      {% for r in recent %}
+      <tr>
+        <td><a href="/assessments/{{ r.pk }}/edit/">{{ r.title }}</a></td>
+        <td><span class="badge badge-blue">{{ r.get_category_display }}</span></td><td>{{ r.duration_mins|default:"-" }}</td><td>{{ r.questions_count|default:"-" }}</td><td><span class="badge badge-blue">{{ r.get_status_display }}</span></td><td style="color:var(--muted)">{{ r.created_at|date:"M d, Y" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty">
+    <p>No records yet.</p>
+    <a href="/assessments/create/" class="btn btn-primary" style="margin-top:1rem">Create First Assessment</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
