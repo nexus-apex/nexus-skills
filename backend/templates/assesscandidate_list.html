@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Assesscandidates | NexusSkills{% endblock %}
+{% block page_title %}Assesscandidates{% endblock %}
+{% block content %}
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+  <form class="search-bar" method="get" style="flex:1;margin-bottom:0">
+    <input type="text" name="search" value="{{ search }}" placeholder="Search assesscandidates...">
+    <select name="status" onchange="this.form.submit()">
+      <option value="">All Status</option>
+      <option value="invited" {% if status_filter == 'invited' %}selected{% endif %}>Invited</option>
+      <option value="started" {% if status_filter == 'started' %}selected{% endif %}>Started</option>
+      <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Completed</option>
+      <option value="expired" {% if status_filter == 'expired' %}selected{% endif %}>Expired</option>
+    </select>
+    <button type="submit" class="btn btn-primary btn-sm">Search</button>
+  </form>
+  <a href="/assesscandidates/create/" class="btn btn-primary">+ New AssessCandidate</a>
+</div>
+
+<div class="card">
+  {% if records %}
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Email</th><th>Phone</th><th>Assessment Title</th><th>Score</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      {% for r in records %}
+      <tr>
+        <td><a href="/assesscandidates/{{ r.pk }}/edit/"><strong>{{ r.name }}</strong></a></td>
+        <td style="color:var(--muted)">{{ r.email|default:"-" }}</td>
+        <td>{{ r.phone|default:"-" }}</td>
+        <td>{{ r.assessment_title|default:"-" }}</td>
+        <td>{{ r.score|default:"-" }}</td>
+        <td class="actions">
+          <a href="/assesscandidates/{{ r.pk }}/edit/" class="btn btn-primary btn-sm">Edit</a>
+          <form method="post" action="/assesscandidates/{{ r.pk }}/delete/" style="display:inline" onsubmit="return confirm('Delete?')">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm">Del</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty">
+    <p>No assesscandidates found.</p>
+    <a href="/assesscandidates/create/" class="btn btn-primary" style="margin-top:1rem">Create AssessCandidate</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
