@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}{% if editing %}Edit{% else %}New{% endif %} AssessCandidate | NexusSkills{% endblock %}
+{% block page_title %}{% if editing %}Edit AssessCandidate{% else %}New AssessCandidate{% endif %}{% endblock %}
+{% block content %}
+<div class="card" style="max-width:750px">
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-row">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" name="name" value="{{ record.name|default:'' }}">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" value="{{ record.email|default:'' }}">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Phone</label>
+        <input type="text" name="phone" value="{{ record.phone|default:'' }}">
+      </div>
+      <div class="form-group">
+        <label>Assessment Title</label>
+        <input type="text" name="assessment_title" value="{{ record.assessment_title|default:'' }}">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Score</label>
+        <input type="number" name="score" value="{{ record.score|default:'0' }}">
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select name="status">
+          <option value="invited" {% if record.status == 'invited' %}selected{% endif %}>Invited</option>
+          <option value="started" {% if record.status == 'started' %}selected{% endif %}>Started</option>
+          <option value="completed" {% if record.status == 'completed' %}selected{% endif %}>Completed</option>
+          <option value="expired" {% if record.status == 'expired' %}selected{% endif %}>Expired</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Started At</label>
+        <input type="date" name="started_at" value="{{ record.started_at|date:'Y-m-d'|default:'' }}">
+      </div>
+      <div class="form-group">
+        <label>Completed At</label>
+        <input type="date" name="completed_at" value="{{ record.completed_at|date:'Y-m-d'|default:'' }}">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Percentile</label>
+        <input type="number" name="percentile" value="{{ record.percentile|default:'0' }}">
+      </div>
+    </div>
+
+    <div style="display:flex;gap:0.75rem;margin-top:1rem">
+      <button type="submit" class="btn btn-primary">{% if editing %}Update{% else %}Create{% endif %} AssessCandidate</button>
+      <a href="/assesscandidates/" class="btn" style="background:var(--border);color:var(--text)">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
